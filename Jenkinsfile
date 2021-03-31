@@ -14,10 +14,10 @@ pipeline {
             }
             steps {
                 withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'webserver_login', \
-                                             
+
                                              passphraseVariable: '', \
                                                              usernameVariable: 'ec2-user')]) {
-                    
+
                     sshPublisher(
                         failOnError: true,
                         continueOnError: false,
@@ -26,7 +26,7 @@ pipeline {
                                 configName: 'production',
                                 sshCredentials: [
                                     username: "ec2-user",
-                                    
+
                                 ],
                                 transfers: [
                                     sshTransfer(
@@ -37,9 +37,10 @@ pipeline {
                                     )
                                 ]
                             ]
-                        }    
+                            )
+                        }
                     }
-            
+
         }
         stage('DeployToProduction') {
             when {
@@ -58,7 +59,7 @@ pipeline {
                                 sshCredentials: [
                                     username: "$USERNAME",
                                     encryptedPassphrase: "$USERPASS"
-                                ], 
+                                ],
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: 'dist/trainSchedule.zip',
