@@ -13,17 +13,10 @@ pipeline {
                 branch 'master'
             }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
-                    sshPublisher(
-                        failOnError: true,
-                        continueOnError: false,
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'staging',
-                                sshCredentials: [
-                                    username: "$USERNAME",
-                                    encryptedPassphrase: "$USERPASS"
-                                ], 
+                withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'webserver_login', \
+                                             
+                                             passphraseVariable: '', \
+                                             usernameVariable: 'ec2-user')])
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: 'dist/trainSchedule.zip',
