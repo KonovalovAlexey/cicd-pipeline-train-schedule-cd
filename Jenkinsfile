@@ -16,7 +16,18 @@ pipeline {
                 withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'webserver_login', \
                                              
                                              passphraseVariable: '', \
-                                             usernameVariable: 'ec2-user')])
+                                                             usernameVariable: 'ec2-user')]) {
+                    
+                    sshPublisher(
+                        failOnError: true,
+                        continueOnError: false,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'production',
+                                sshCredentials: [
+                                    username: "ec2-user",
+                                    
+                                ],
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: 'dist/trainSchedule.zip',
@@ -25,7 +36,8 @@ pipeline {
                                         execCommand: 'sudo /usr/bin/systemctl stop train-schedule && rm -rf /opt/train-schedule/* && unzip /tmp/trainSchedule.zip -d /opt/train-schedule && sudo /usr/bin/systemctl start train-schedule'
                                     )
                                 ]
-                }
+                                }
+                    }
             
         }
         stage('DeployToProduction') {
